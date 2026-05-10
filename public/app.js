@@ -140,6 +140,17 @@ function createProject(name = "New project") {
   state.activeProjectId = project.id;
   saveState();
   render();
+  focusAndSelect("project-name");
+}
+
+function renameProject(id) {
+  const project = state.projects.find(p => p.id === id);
+  if (!project) return;
+  const next = prompt("Rename project:", project.name);
+  if (next === null) return;
+  project.name = next.trim() || project.name;
+  saveState();
+  render();
 }
 
 function deleteProject(id) {
@@ -168,6 +179,19 @@ function createConversation(name) {
   };
   project.conversations.unshift(conv);
   project.activeConversationId = conv.id;
+  saveState();
+  render();
+  focusAndSelect("conv-name");
+}
+
+function renameConversation(convId) {
+  const project = getActiveProject();
+  if (!project) return;
+  const conv = project.conversations.find(c => c.id === convId);
+  if (!conv) return;
+  const next = prompt("Rename conversation:", conv.name);
+  if (next === null) return;
+  conv.name = next.trim() || conv.name;
   saveState();
   render();
 }
@@ -563,12 +587,25 @@ function renderSidebar() {
     const item = document.createElement("div");
     item.className = "project-item" + (isActive ? " active" : "");
 
+    const headRow = document.createElement("div");
+    headRow.className = "project-head-row";
+
     const head = document.createElement("button");
     head.className = "project-head";
     head.innerHTML = `<span class="caret">${isActive ? "▾" : "▸"}</span><span class="name"></span>`;
     head.querySelector(".name").textContent = p.name || "Untitled";
     head.addEventListener("click", () => selectProject(p.id));
-    item.appendChild(head);
+    head.addEventListener("dblclick", (e) => { e.preventDefault(); renameProject(p.id); });
+    headRow.appendChild(head);
+
+    const renameBtn = document.createElement("button");
+    renameBtn.className = "row-action";
+    renameBtn.textContent = "✏️";
+    renameBtn.title = "Rename project";
+    renameBtn.addEventListener("click", (e) => { e.stopPropagation(); renameProject(p.id); });
+    headRow.appendChild(renameBtn);
+
+    item.appendChild(headRow);
 
     if (isActive) {
       const subList = document.createElement("div");
@@ -584,6 +621,9 @@ function renderSidebar() {
       subList.appendChild(newBtn);
 
       for (const c of p.conversations) {
+        const row = document.createElement("div");
+        row.className = "conv-row";
+
         const ci = document.createElement("button");
         ci.className = "conv-item" + (c.id === p.activeConversationId ? " active" : "");
         ci.textContent = c.name || "Untitled";
@@ -591,7 +631,17 @@ function renderSidebar() {
           e.stopPropagation();
           selectConversation(c.id);
         });
-        subList.appendChild(ci);
+        ci.addEventListener("dblclick", (e) => { e.preventDefault(); renameConversation(c.id); });
+        row.appendChild(ci);
+
+        const rename = document.createElement("button");
+        rename.className = "row-action";
+        rename.textContent = "✏️";
+        rename.title = "Rename conversation";
+        rename.addEventListener("click", (e) => { e.stopPropagation(); renameConversation(c.id); });
+        row.appendChild(rename);
+
+        subList.appendChild(row);
       }
 
       item.appendChild(subList);
@@ -864,6 +914,13 @@ function updateSendButton() {
 function autosizeTextarea(el) {
   el.style.height = "auto";
   el.style.height = Math.min(el.scrollHeight, 240) + "px";
+}
+
+function focusAndSelect(id) {
+  queueMicrotask(() => {
+    const el = $(id);
+    if (el) { el.focus(); el.select(); }
+  });
 }
 
 function flashToast(text, isError = false) {

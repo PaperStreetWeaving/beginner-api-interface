@@ -139,6 +139,38 @@ body {
 .conv-item:hover { background: var(--bg-elev-2); color: var(--text); }
 .conv-item.active { background: var(--bg-elev-2); color: var(--text); font-weight: 500; }
 
+/* Rename buttons that show on hover next to sidebar items */
+.project-head-row,
+.conv-row {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.project-head-row > .project-head,
+.conv-row > .conv-item,
+.conv-row > .conv-new {
+  flex: 1;
+}
+
+.row-action {
+  background: transparent;
+  border: none;
+  padding: 4px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  border-radius: 4px;
+}
+
+.project-head-row:hover .row-action,
+.conv-row:hover .row-action {
+  opacity: 0.7;
+}
+
+.row-action:hover { opacity: 1 !important; background: var(--bg-elev-2); }
+
 .sidebar-footer {
   padding: 12px 16px;
   border-top: 1px solid var(--border);
@@ -187,7 +219,7 @@ body {
 .project-name {
   flex: 1;
   background: transparent;
-  border: 1px solid transparent;
+  border: 1px dashed var(--border);
   border-radius: var(--radius-sm);
   padding: 6px 8px;
   font-size: 16px;
@@ -196,8 +228,8 @@ body {
   min-width: 0;
 }
 
-.project-name:hover { border-color: var(--border); }
-.project-name:focus { border-color: var(--accent); outline: none; }
+.project-name:hover { border-style: solid; }
+.project-name:focus { border-color: var(--accent); border-style: solid; outline: none; }
 
 /* Conversation sub-header */
 .conv-header {
@@ -213,7 +245,7 @@ body {
 .conv-name {
   flex: 1;
   background: transparent;
-  border: 1px solid transparent;
+  border: 1px dashed var(--border);
   border-radius: var(--radius-sm);
   padding: 4px 8px;
   font-size: 13px;
@@ -222,8 +254,8 @@ body {
   min-width: 0;
 }
 
-.conv-name:hover { border-color: var(--border); color: var(--text); }
-.conv-name:focus { border-color: var(--accent); outline: none; color: var(--text); }
+.conv-name:hover { border-style: solid; color: var(--text); }
+.conv-name:focus { border-color: var(--accent); border-style: solid; outline: none; color: var(--text); }
 
 .conv-usage {
   font-size: 12px;
