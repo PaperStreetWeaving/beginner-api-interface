@@ -25,6 +25,8 @@ The whole thing is ~1,000 lines of code across 4 files. Read it. Change it. Make
 
 ---
 
+> **First time deploying anything to Vercel?** Read [docs/SETUP.md](docs/SETUP.md) — a step-by-step guide with no shortcuts and no assumed knowledge.
+
 ## Setup — the 5-minute path
 
 You'll need:
