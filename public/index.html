@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beginner API Interface</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <aside id="sidebar">
+    <header class="sidebar-header">
+      <h1>Beginner API</h1>
+      <button id="new-project-btn" class="primary" title="New project">+ New project</button>
+    </header>
+    <nav id="project-list" aria-label="Projects"></nav>
+    <footer class="sidebar-footer">
+      <a href="https://docs.anthropic.com/en/api/getting-started" target="_blank" rel="noopener">API docs</a>
+    </footer>
+  </aside>
+
+  <main id="main">
+    <div id="empty-state" class="empty-state">
+      <h2>No project selected</h2>
+      <p>Create a project on the left to get started.</p>
+    </div>
+
+    <section id="project-view" hidden>
+      <header class="project-header">
+        <input id="project-name" class="project-name" type="text" maxlength="80" />
+        <div class="project-controls">
+          <select id="model-select" title="Model"></select>
+          <label class="toggle">
+            <input type="checkbox" id="web-search-toggle" />
+            <span>Web search</span>
+          </label>
+          <button id="settings-btn" class="ghost" title="Project settings">Settings</button>
+          <button id="delete-project-btn" class="danger ghost" title="Delete this project">Delete</button>
+        </div>
+      </header>
+
+      <div id="conversation" class="conversation" aria-live="polite"></div>
+
+      <div id="files-bar" class="files-bar" hidden>
+        <span class="files-bar-label">Attached:</span>
+        <ul id="active-files"></ul>
+      </div>
+
+      <form id="composer" class="composer" autocomplete="off">
+        <button type="button" id="attach-btn" class="ghost" title="Attach a file">📎</button>
+        <input type="file" id="file-input" multiple hidden
+               accept=".txt,.md,.markdown,.py,.js,.ts,.tsx,.jsx,.json,.html,.htm,.css,.csv,.tsv,.yml,.yaml,.toml,.xml,.sh,.rb,.go,.rs,.java,.c,.cpp,.h,.hpp,.pdf,.png,.jpg,.jpeg,.gif,.webp" />
+        <textarea id="prompt" rows="1" placeholder="Message Claude…" required></textarea>
+        <button type="submit" id="send-btn" class="primary">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <dialog id="settings-dialog">
+    <form method="dialog" class="settings-form">
+      <h3>Project settings</h3>
+      <label>
+        System prompt
+        <textarea id="system-prompt" rows="6" placeholder="You are a helpful assistant…"></textarea>
+      </label>
+
+      <h4>File library</h4>
+      <p class="muted small">Files you upload live here. Toggle them on to send with your next message.</p>
+      <ul id="file-library"></ul>
+
+      <menu>
+        <button value="cancel" class="ghost">Close</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="/app.js"></script>
+</body>
+</html>
