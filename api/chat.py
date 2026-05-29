@@ -62,7 +62,7 @@ class handler(BaseHTTPRequestHandler):
         # shape AND rejects temperature/top_p/top_k entirely. Older models use
         # the classic extended-thinking budget. Picking the right shape per model
         # is the difference between a clean response and a 400 invalid_request.
-        uses_adaptive_thinking = model in {"claude-opus-4-7"}
+        uses_adaptive_thinking = model in {"claude-opus-4-7", "claude-opus-4-8"}
 
         max_tokens = int(data.get("maxTokens") or DEFAULT_MAX_TOKENS)
         # Extended thinking needs max_tokens > budget. Adaptive has no budget,
