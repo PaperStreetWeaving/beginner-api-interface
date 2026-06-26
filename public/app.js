@@ -617,7 +617,7 @@ async function generateAssistant() {
     await streamChat(
       {
         model: project.model,
-        system: project.systemPrompt || DEFAULT_SYSTEM,
+        system: `Current date and time: ${new Date().toLocaleString('en-CA', {timeZone: 'America/Edmonton', dateStyle: 'full', timeStyle: 'short'})}\n\n${project.systemPrompt || DEFAULT_SYSTEM}`,
         messages: buildApiMessages(project, cleanMessagesForApi(conv.messages)).slice(0, -1),
         useWebSearch: !!project.webSearch,
         thinking: !!project.thinking,
