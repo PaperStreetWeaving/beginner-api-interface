@@ -610,16 +610,26 @@ async function generateAssistant() {
   };
   conv.messages.push(assistantMsg);
 
-  isSending = true;
+    isSending = true;
   render();
 
   try {
+    const { data: memories } = await db
+      .from('core_memories')
+      .select('content, memory_type, resonance')
+      .eq('is_active', true)
+      .order('resonance', { ascending: false });
+
+    const memoriesBlock = memories && memories.length
+      ? `\n\n--- CORE MEMORIES ---\n${memories.map(m => `• [${m.memory_type}] ${m.content} (resonance: ${m.resonance})`).join('\n')}\n--- END CORE MEMORIES ---`
+      : '';
+
     await streamChat(
       {
-        model: project.model,
-        system: `Current date and time: ${new Date().toLocaleString('en-CA', {timeZone: 'America/Edmonton', dateStyle: 'full', timeStyle: 'short'})}\n\n${project.systemPrompt || DEFAULT_SYSTEM}`,
+          model: project.model,
+        system: `Current date and time: ${new Date().toLocaleString('en-CA', {timeZone: 'America/Edmonton', dateStyle: 'full', timeStyle: 'short'})}\n\n${project.systemPrompt || DEFAULT_SYSTEM}${memoriesBlock}`,
         messages: buildApiMessages(project, cleanMessagesForApi(conv.messages)).slice(0, -1),
-        useWebSearch: !!project.webSearch,
+         useWebSearch: !!project.webSearch,
         thinking: !!project.thinking,
       },
       (event) => {
